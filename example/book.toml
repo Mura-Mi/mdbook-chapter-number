@@ -1,0 +1,8 @@
+[book]
+authors = ["Takuya \"Mura-Mi\" Murakami"]
+language = "en"
+multilingual = false
+src = "src"
+title = "example"
+
+[preprocessor.section-number]
