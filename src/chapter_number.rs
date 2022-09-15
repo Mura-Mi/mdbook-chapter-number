@@ -19,20 +19,14 @@ impl ChapterNumber {
                 let c = &ch.content;
                 let mut tokenized = markdown::tokenize(c);
                 let mut first: Block = tokenized[0].clone();
-                if let Header(spans, usize) = first {
-                    if let Some(Text(txt)) = spans.first() {
-                        let mut new_spans = vec![Text(a.to_string() + " " + txt)];
-                        tokenized[0] = Header(new_spans, usize);
-                    }
+                if let Header(mut spans, usize) = first {
+                    let mut new_spans = vec![Text(a.to_string() + " ")];
+                    new_spans.append(&mut spans);
+                    tokenized[0] = Header(new_spans, usize);
                     ch.content = markdown::generate_markdown(tokenized);
                 }
-
             }
         }
-    }
-
-    fn modify_content(a: &SectionNumber, c: &str) -> String {
-        a.to_string() + " " + c
     }
 }
 
@@ -46,16 +40,5 @@ impl Preprocessor for ChapterNumber {
             ChapterNumber::process_chapter(item)
         });
         Ok(book)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use mdbook::book::SectionNumber;
-    use super::*;
-
-    #[test]
-    fn test_process_chapter() {
-        println!("{}", ChapterNumber::modify_content(&SectionNumber(vec![1,2,3]), "test"));
     }
 }
