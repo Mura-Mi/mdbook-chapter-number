@@ -365,6 +365,7 @@ name = "mdbook-section-number"
 version = "0.1.0"
 dependencies = [
  "mdbook",
+ "serde_json",
  "structopt",
 ]
 
