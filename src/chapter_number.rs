@@ -1,6 +1,9 @@
 pub struct ChapterNumber;
 
-use mdbook::book::{Book,BookItem, SectionNumber};
+use markdown::Block;
+use markdown::Block::Header;
+use markdown::Span::Text;
+use mdbook::book::{Book, BookItem, SectionNumber};
 use mdbook::BookItem::Chapter;
 use mdbook::errors::Error;
 use mdbook::preprocess::{Preprocessor, PreprocessorContext};
@@ -14,7 +17,16 @@ impl ChapterNumber {
         if let Chapter(ref mut ch) = item {
             if let Some(a) = &ch.number {
                 let c = &ch.content;
-                ch.content = Self::modify_content(a, c);
+                let mut tokenized = markdown::tokenize(c);
+                let mut first: Block = tokenized[0].clone();
+                if let Header(spans, usize) = first {
+                    if let Some(Text(txt)) = spans.first() {
+                        let mut new_spans = vec![Text(a.to_string() + " " + txt)];
+                        tokenized[0] = Header(new_spans, usize);
+                    }
+                    ch.content = markdown::generate_markdown(tokenized);
+                }
+
             }
         }
     }
