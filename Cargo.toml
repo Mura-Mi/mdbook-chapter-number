@@ -8,6 +8,7 @@ homepage = "https://github.com/Mura-Mi/mdbook-chapter-number"
 repository = "https://github.com/Mura-Mi/mdbook-chapter-number"
 readme = "README.md"
 keywords = ["mdbook", "preprocessor", "markdown"]
+exclude = [".idea", ".gitignore", ".github"]
 
 [dependencies]
 mdbook = { version = "0.4.21", default-features = false }
