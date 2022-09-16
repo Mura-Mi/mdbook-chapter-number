@@ -16,6 +16,7 @@ jobs:
       - name: setup rust
         uses: actions-rs/toolchain@v1
         with:
+          toolchain: nightly
           components: rustfmt, clippy
       - name: check
         uses: actions-rs/cargo@v1
