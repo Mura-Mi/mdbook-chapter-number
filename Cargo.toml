@@ -1,5 +1,5 @@
 [package]
-name = "mdbook-section-number"
+name = "mdbook-chapter-number"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
