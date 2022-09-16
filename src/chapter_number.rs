@@ -42,3 +42,50 @@ impl Preprocessor for ChapterNumber {
         Ok(book)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use mdbook::book::{Chapter, SectionNumber};
+    use mdbook::BookItem;
+    use crate::ChapterNumber;
+    use pretty_assertions::assert_eq;
+
+    fn sut_chapter(content: &str, chapter_number: Option<SectionNumber>) -> BookItem {
+        BookItem::Chapter(Chapter {
+            name: "".to_string(),
+            content: content.to_string(),
+            number: chapter_number,
+            sub_items: vec![],
+            path: None,
+            source_path: None,
+            parent_names: vec![],
+        })
+    }
+
+    fn test_processor(source: &str, section_number: Option<SectionNumber>, expected: &str) {
+        let mut sut = sut_chapter(source, section_number);
+        ChapterNumber::process_chapter(&mut sut);
+        if let BookItem::Chapter(ch) = sut {
+            assert_eq!(ch.content, expected);
+        }
+    }
+
+    #[test]
+    fn test_no_change() {
+        let content = "
+# Hello
+
+this is dummy text.
+";
+        test_processor(content, None, content);
+    }
+
+    #[test]
+    fn test_appends_chapter_number() {
+        test_processor("# Hello
+
+this is dummy text.", Some(SectionNumber(vec![1, 2])), "# 1.2. Hello
+
+this is dummy text.");
+    }
+}
