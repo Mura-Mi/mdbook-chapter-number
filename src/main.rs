@@ -1,10 +1,10 @@
 mod chapter_number;
 
-use mdbook::errors::Error;
-use std::{io, process};
-use mdbook::preprocess::{CmdPreprocessor, Preprocessor};
-use structopt::StructOpt;
 use crate::chapter_number::ChapterNumber;
+use mdbook::errors::Error;
+use mdbook::preprocess::{CmdPreprocessor, Preprocessor};
+use std::{io, process};
+use structopt::StructOpt;
 
 #[derive(StructOpt)]
 struct Opt {

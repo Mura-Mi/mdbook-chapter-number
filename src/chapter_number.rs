@@ -4,9 +4,9 @@ use markdown::Block;
 use markdown::Block::Header;
 use markdown::Span::Text;
 use mdbook::book::{Book, BookItem};
-use mdbook::BookItem::Chapter;
 use mdbook::errors::Error;
 use mdbook::preprocess::{Preprocessor, PreprocessorContext};
+use mdbook::BookItem::Chapter;
 
 impl ChapterNumber {
     pub fn new() -> Self {
@@ -36,18 +36,16 @@ impl Preprocessor for ChapterNumber {
     }
 
     fn run(&self, _ctx: &PreprocessorContext, mut book: Book) -> Result<Book, Error> {
-        book.for_each_mut(|item| {
-            ChapterNumber::process_chapter(item)
-        });
+        book.for_each_mut(|item| ChapterNumber::process_chapter(item));
         Ok(book)
     }
 }
 
 #[cfg(test)]
 mod test {
+    use crate::ChapterNumber;
     use mdbook::book::{Chapter, SectionNumber};
     use mdbook::BookItem;
-    use crate::ChapterNumber;
     use pretty_assertions::assert_eq;
 
     fn sut_chapter(content: &str, chapter_number: Option<SectionNumber>) -> BookItem {
@@ -82,10 +80,14 @@ this is dummy text.
 
     #[test]
     fn test_appends_chapter_number() {
-        test_processor("# Hello
+        test_processor(
+            "# Hello
 
-this is dummy text.", Some(SectionNumber(vec![1, 2])), "# 1.2. Hello
+this is dummy text.",
+            Some(SectionNumber(vec![1, 2])),
+            "# 1.2. Hello
 
-this is dummy text.");
+this is dummy text.",
+        );
     }
 }
