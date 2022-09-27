@@ -1,12 +1,11 @@
-pub struct ChapterNumber;
-
-use markdown::Block;
 use markdown::Block::Header;
 use markdown::Span::Text;
 use mdbook::book::{Book, BookItem};
+use mdbook::BookItem::Chapter;
 use mdbook::errors::Error;
 use mdbook::preprocess::{Preprocessor, PreprocessorContext};
-use mdbook::BookItem::Chapter;
+
+pub struct ChapterNumber;
 
 impl ChapterNumber {
     pub fn new() -> Self {
@@ -18,11 +17,10 @@ impl ChapterNumber {
             if let Some(a) = &ch.number {
                 let c = &ch.content;
                 let mut tokenized = markdown::tokenize(c);
-                let first: Block = tokenized[0].clone();
-                if let Header(mut spans, usize) = first {
+                if let Some(Header(spans, usize)) = tokenized.first() {
                     let mut new_spans = vec![Text(a.to_string() + " ")];
-                    new_spans.append(&mut spans);
-                    tokenized[0] = Header(new_spans, usize);
+                    new_spans.append(&mut spans.clone());
+                    tokenized[0] = Header(new_spans, *usize);
                     ch.content = markdown::generate_markdown(tokenized);
                 }
             }
@@ -43,10 +41,11 @@ impl Preprocessor for ChapterNumber {
 
 #[cfg(test)]
 mod test {
-    use crate::ChapterNumber;
     use mdbook::book::{Chapter, SectionNumber};
     use mdbook::BookItem;
     use pretty_assertions::assert_eq;
+
+    use crate::ChapterNumber;
 
     fn sut_chapter(content: &str, chapter_number: Option<SectionNumber>) -> BookItem {
         BookItem::Chapter(Chapter {
