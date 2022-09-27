@@ -5,5 +5,5 @@ multilingual = false
 src = "src"
 title = "example"
 
-[preprocessor.section-number]
+[preprocessor.chapter-number]
 renderer = ["html"]
