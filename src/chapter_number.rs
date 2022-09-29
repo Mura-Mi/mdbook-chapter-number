@@ -1,9 +1,9 @@
-use markdown::Block::Header;
-use markdown::Span::Text;
 use mdbook::book::{Book, BookItem};
 use mdbook::BookItem::Chapter;
 use mdbook::errors::Error;
 use mdbook::preprocess::{Preprocessor, PreprocessorContext};
+use pulldown_cmark::{CowStr, Event, HeadingLevel};
+use pulldown_cmark::Tag::Heading;
 
 pub struct ChapterNumber;
 
@@ -16,13 +16,37 @@ impl ChapterNumber {
         if let Chapter(ref mut ch) = item {
             if let Some(a) = &ch.number {
                 let c = &ch.content;
-                let mut tokenized = markdown::tokenize(c);
-                if let Some(Header(spans, usize)) = tokenized.first() {
-                    let mut new_spans = vec![Text(a.to_string() + " ")];
-                    new_spans.append(&mut spans.clone());
-                    tokenized[0] = Header(new_spans, *usize);
-                    ch.content = markdown::generate_markdown(tokenized);
-                }
+                let tokenized = mdbook::utils::new_cmark_parser(c, false);
+
+                let mut in_first_heading = false;
+
+                let events = tokenized.map(|event|
+                    {
+                        match event {
+                            Event::Start(Heading(HeadingLevel::H1, _, _)) => {
+                                in_first_heading = true;
+                                event
+                            }
+                            Event::Text(s) if in_first_heading => {
+                                let mut new_content = String::new();
+                                new_content.push_str(&a.to_string());
+                                new_content.push_str(" ");
+                                new_content.push_str(&s);
+                                Event::Text(CowStr::from(new_content))
+                            }
+                            Event::End(Heading(HeadingLevel::H1, _, _)) => {
+                                in_first_heading = false;
+                                event
+                            }
+                            _ => event
+                        }
+                    }
+                );
+
+                let mut buf = String::with_capacity(c.len() + a.to_string().len());
+                pulldown_cmark_to_cmark::cmark(events, &mut buf).expect("cmark parsing failed");
+
+                ch.content = buf;
             }
         }
     }
@@ -63,7 +87,7 @@ mod test {
         let mut sut = sut_chapter(source, section_number);
         ChapterNumber::process_chapter(&mut sut);
         if let BookItem::Chapter(ch) = sut {
-            assert_eq!(ch.content, expected);
+            assert_eq!(expected, ch.content);
         }
     }
 
@@ -87,6 +111,21 @@ this is dummy text.",
             "# 1.2. Hello
 
 this is dummy text.",
+        );
+    }
+
+    #[test]
+    fn test_supports_ordered_list() {
+        test_processor(
+            "# Hello
+
+1. ordered
+1. list",
+            Some(SectionNumber(vec![1, 2])),
+            "# 1.2. Hello
+
+1. ordered
+1. list",
         );
     }
 }
