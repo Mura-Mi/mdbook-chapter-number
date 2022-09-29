@@ -1,6 +1,6 @@
 [package]
 name = "mdbook-chapter-number"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 description = "A mdBook preprocessor that adds chapter numbers to the each page header"
