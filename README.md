@@ -2,6 +2,7 @@
 
 ![CI](https://github.com/Mura-Mi/mdbook-chapter-number/actions/workflows/ci.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![crates.io](https://img.shields.io/crates/v/mdbook-chapter-number.svg)](https://crates.io/crates/mdbook-chapter-number)
 
 This is a [mdbook](https://rust-lang.github.io/mdBook/) preprocessor that adds chapter numbers to the each page header.
 
