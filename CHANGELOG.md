@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.1.3](https://github.com/Mura-Mi/mdbook-chapter-number/compare/v0.1.2...v0.1.3) - 2022-10-14
+- Update Rust crate serde_json to 1.0.86 by @renovate in https://github.com/Mura-Mi/mdbook-chapter-number/pull/10
+
 ## [v0.1.2](https://github.com/Mura-Mi/mdbook-chapter-number/compare/v0.1.1...v0.1.2) - 2022-09-29
 - Introduce tagpr by @Mura-Mi in https://github.com/Mura-Mi/mdbook-chapter-number/pull/5
 - Change markdown parser from markdown to pulldown-cmark by @Mura-Mi in https://github.com/Mura-Mi/mdbook-chapter-number/pull/7
