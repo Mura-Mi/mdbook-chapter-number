@@ -13,7 +13,7 @@ exclude = [".idea", ".gitignore", ".github"]
 [dependencies]
 mdbook = { version = "0.4.21", default-features = false }
 structopt = "0.3.26"
-serde_json = "1.0.86"
+serde_json = "1.0.116"
 pulldown-cmark = "0.9.2"
 pulldown-cmark-to-cmark = "10.0.4"
 
